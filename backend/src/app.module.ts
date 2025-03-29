@@ -7,11 +7,13 @@ import { VersionEntity } from './version.entity';
 import { Keyv, createKeyv } from '@keyv/redis';
 import { CacheableMemory } from 'cacheable';
 import { CacheModule } from '@nestjs/cache-manager';
+import { VehicleService } from './vehicle.service';
+import { VehicleEntity } from './vehicle.entity';
 
 @Module({
   imports: [
     DatabaseModule,
-    TypeOrmModule.forFeature([VersionEntity]),
+    TypeOrmModule.forFeature([VersionEntity, VehicleEntity]),
     CacheModule.registerAsync({
       useFactory: async () => {
         return {
@@ -27,6 +29,6 @@ import { CacheModule } from '@nestjs/cache-manager';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, VehicleService],
 })
 export class AppModule {}
