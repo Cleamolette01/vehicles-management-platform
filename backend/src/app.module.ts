@@ -3,12 +3,14 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { VersionEntity } from './version.entity';
+import { VersionEntity } from './entities/version.entity';
 import { Keyv, createKeyv } from '@keyv/redis';
 import { CacheableMemory } from 'cacheable';
 import { CacheModule } from '@nestjs/cache-manager';
-import { VehicleService } from './vehicle.service';
-import { VehicleEntity } from './vehicle.entity';
+import { SeedDatabaseService } from './services/seed-database.service';
+import { VehicleEntity } from './entities/vehicle.entity';
+import { GetVehiclesController } from './controllers/get-vehicles/get-vehicles.controller';
+import { GetVehiclesService } from './services/get-vehicles.service';
 
 @Module({
   imports: [
@@ -28,7 +30,7 @@ import { VehicleEntity } from './vehicle.entity';
       },
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService, VehicleService],
+  controllers: [AppController, GetVehiclesController],
+  providers: [AppService, SeedDatabaseService, GetVehiclesService],
 })
 export class AppModule {}
