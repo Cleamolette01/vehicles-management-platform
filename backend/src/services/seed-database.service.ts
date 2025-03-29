@@ -1,14 +1,14 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { VehicleEntity, VehicleStatus, VehicleType } from './vehicle.entity';
+import { VehicleEntity, VehicleStatus, VehicleType } from '../entities/vehicle.entity';
 import * as fs from 'fs';
 import * as readline from 'readline';
 import * as path from 'path';
 
 
 @Injectable()
-export class VehicleService implements OnModuleInit {
+export class SeedDatabaseService implements OnModuleInit {
   constructor(
     @InjectRepository(VehicleEntity)
     private vehicleRepository: Repository<VehicleEntity>,
@@ -22,7 +22,7 @@ export class VehicleService implements OnModuleInit {
     }
 
     const vehicles: VehicleEntity[] = [];
-    const filePath = path.resolve(__dirname, '../../data/cars.csv');
+    const filePath = path.resolve(__dirname, '../../../data/cars.csv');
     const fileStream = fs.createReadStream(filePath);
     const rl = readline.createInterface({ input: fileStream, crlfDelay: Infinity });
 
