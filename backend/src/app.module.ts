@@ -11,6 +11,8 @@ import { SeedDatabaseService } from './services/seed-database.service';
 import { VehicleEntity } from './entities/vehicle.entity';
 import { GetVehiclesController } from './controllers/get-vehicles/get-vehicles.controller';
 import { GetVehiclesService } from './services/get-vehicles.service';
+import { AddVehicleController } from './controllers/add-vehicle/add-vehicle.controller';
+import { AddVehicleService } from './services/add-vehicule.service';
 
 @Module({
   imports: [
@@ -30,7 +32,7 @@ import { GetVehiclesService } from './services/get-vehicles.service';
       },
     }),
   ],
-  controllers: [AppController, GetVehiclesController],
-  providers: [AppService, SeedDatabaseService, GetVehiclesService],
+  controllers: [AppController, GetVehiclesController, AddVehicleController],
+  providers: [AppService, SeedDatabaseService, GetVehiclesService, AddVehicleService],
 })
 export class AppModule {}
