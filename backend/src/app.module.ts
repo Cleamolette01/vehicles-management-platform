@@ -17,6 +17,8 @@ import { UpdateVehicleController } from './controllers/update-vehicle/update-veh
 import { UpdateVehicleService } from './services/update-vehicle.service';
 import { RemoveVehicleController } from './controllers/remove-vehicle/remove-vehicle.controller';
 import { RemoveVehicleService } from './services/remove-vehicle.service';
+import { FleetEfficiencyController } from './controllers/get-fleet-efficiency/get-fleet-efficiency.controller';
+import { FleetEfficiencyService } from './services/fleet-efficiency.service';
 
 @Module({
   imports: [
@@ -36,7 +38,7 @@ import { RemoveVehicleService } from './services/remove-vehicle.service';
       },
     }),
   ],
-  controllers: [AppController, GetVehiclesController, AddVehicleController, UpdateVehicleController, RemoveVehicleController],
-  providers: [AppService, SeedDatabaseService, GetVehiclesService, AddVehicleService, UpdateVehicleService, RemoveVehicleService],
+  controllers: [AppController, GetVehiclesController, AddVehicleController, UpdateVehicleController, RemoveVehicleController, FleetEfficiencyController],
+  providers: [AppService, SeedDatabaseService, GetVehiclesService, AddVehicleService, UpdateVehicleService, RemoveVehicleService, FleetEfficiencyService],
 })
 export class AppModule {}
