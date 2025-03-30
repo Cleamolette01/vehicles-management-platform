@@ -13,6 +13,8 @@ import { GetVehiclesController } from './controllers/get-vehicles/get-vehicles.c
 import { GetVehiclesService } from './services/get-vehicles.service';
 import { AddVehicleController } from './controllers/add-vehicle/add-vehicle.controller';
 import { AddVehicleService } from './services/add-vehicule.service';
+import { UpdateVehicleController } from './controllers/update-vehicle/update-vehicle.controller';
+import { UpdateVehicleService } from './services/update-vehicle.service';
 
 @Module({
   imports: [
@@ -32,7 +34,7 @@ import { AddVehicleService } from './services/add-vehicule.service';
       },
     }),
   ],
-  controllers: [AppController, GetVehiclesController, AddVehicleController],
-  providers: [AppService, SeedDatabaseService, GetVehiclesService, AddVehicleService],
+  controllers: [AppController, GetVehiclesController, AddVehicleController, UpdateVehicleController],
+  providers: [AppService, SeedDatabaseService, GetVehiclesService, AddVehicleService, UpdateVehicleService],
 })
 export class AppModule {}
