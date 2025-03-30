@@ -20,9 +20,9 @@ import { FleetEfficiencyController } from './controllers/get-fleet-efficiency/ge
 import { FleetEfficiencyService } from './services/analytics/fleet-efficiency.service';
 import { GetVehiclesService } from './services/vehicle-management/get-vehicles.service';
 import { FleetCompositionController } from './controllers/get-fleet-composition/get-fleet-composition.controller';
-import { FleetCompositionService } from './services/analytics/fleet-composition.service';
 import { FleetOperationalController } from './controllers/get-fleet-operational/get-fleet-operational.controller';
 import { FleetOperationalService } from './services/analytics/fleet-operational.service';
+import { FleetCompositionService } from './services/analytics/fleet-composition/fleet-composition.service';
 
 @Module({
   imports: [
