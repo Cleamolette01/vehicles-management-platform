@@ -14,19 +14,21 @@ export class FleetEfficiencyService {
     return this.vehicleRepository
       .createQueryBuilder('vehicle')
       .select('vehicle.model', 'model')
-      .addSelect('AVG(vehicle.avg_energy_consumption)', 'avgEnergyConsumption')
+      .addSelect('AVG(vehicle.avg_energy_consumption)', 'vehicles_avg_energy_consumption')
       .groupBy('vehicle.model')
-      .orderBy('avgEnergyConsumption', 'ASC')
+      .orderBy('vehicles_avg_energy_consumption', 'ASC')
       .getRawMany();
   }
+
+
 
   async getEmissionsComparison(): Promise<{ type: string; avgEmissions: number }[]> {
     return this.vehicleRepository
       .createQueryBuilder('vehicle')
       .select('vehicle.type', 'type')
-      .addSelect('AVG(vehicle.emission_gco2_km)', 'avgEmissions')
+      .addSelect('AVG(vehicle.emission_gco2_km)', 'vehicles_avg_emissions')
       .groupBy('vehicle.type')
-      .orderBy('avgEmissions', 'ASC')
+      .orderBy('vehicles_avg_emissions', 'ASC')
       .getRawMany();
   }
 
