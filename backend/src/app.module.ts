@@ -11,17 +11,17 @@ import { SeedDatabaseService } from './services/seed-database.service';
 import { VehicleEntity } from './entities/vehicle.entity';
 import { GetVehiclesController } from './controllers/get-vehicles/get-vehicles.controller';
 import { AddVehicleController } from './controllers/add-vehicle/add-vehicle.controller';
-import { AddVehicleService } from './services/vehicle-management/add-vehicule.service';
+import { AddVehicleService } from './services/vehicle-management/add-vehicule/add-vehicule.service';
 import { UpdateVehicleController } from './controllers/update-vehicle/update-vehicle.controller';
-import { UpdateVehicleService } from './services/vehicle-management/update-vehicle.service';
+import { UpdateVehicleService } from './services/vehicle-management/update-vehicle/update-vehicle.service';
 import { RemoveVehicleController } from './controllers/remove-vehicle/remove-vehicle.controller';
-import { RemoveVehicleService } from './services/vehicle-management/remove-vehicle.service';
+import { RemoveVehicleService } from './services/vehicle-management/remove-vehicle/remove-vehicle.service';
 import { FleetEfficiencyController } from './controllers/get-fleet-efficiency/get-fleet-efficiency.controller';
-import { FleetEfficiencyService } from './services/analytics/fleet-efficiency.service';
-import { GetVehiclesService } from './services/vehicle-management/get-vehicles.service';
+import { FleetEfficiencyService } from './services/analytics/fleet-efficiency/fleet-efficiency.service';
+import { GetVehiclesService } from './services/vehicle-management/get-vehicles/get-vehicles.service';
 import { FleetCompositionController } from './controllers/get-fleet-composition/get-fleet-composition.controller';
 import { FleetOperationalController } from './controllers/get-fleet-operational/get-fleet-operational.controller';
-import { FleetOperationalService } from './services/analytics/fleet-operational.service';
+import { FleetOperationalService } from './services/analytics/fleet-operational/fleet-operational.service';
 import { FleetCompositionService } from './services/analytics/fleet-composition/fleet-composition.service';
 
 @Module({

@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { FleetEfficiencyService } from 'src/services/analytics/fleet-efficiency.service';
+import { FleetEfficiencyService } from 'src/services/analytics/fleet-efficiency/fleet-efficiency.service';
 
 @Controller('analytics')
 export class FleetEfficiencyController {

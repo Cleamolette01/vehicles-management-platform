@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { VehicleEntity, VehicleStatus } from 'src/entities/vehicle.entity';
+import { VehicleEntity, VehicleStatus } from '../../../entities/vehicle.entity';
 import { Cache } from 'cache-manager';
 
 @Injectable()
