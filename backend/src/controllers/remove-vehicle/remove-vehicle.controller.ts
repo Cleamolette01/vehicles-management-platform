@@ -1,5 +1,5 @@
 import { Controller, Body, Delete, Param } from '@nestjs/common';
-import { RemoveVehicleService } from 'src/services/remove-vehicle.service';
+import { RemoveVehicleService } from 'src/services/vehicle-management/remove-vehicle.service';
 
 
 @Controller('vehicles')

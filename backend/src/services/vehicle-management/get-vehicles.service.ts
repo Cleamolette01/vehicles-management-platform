@@ -1,9 +1,9 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { VehicleEntity } from '../entities/vehicle.entity';
-import { PaginationAndFilteringDto } from '../dtos/pagination-and-filtering.dto';
 import { VehicleNotFoundException } from 'src/exceptions/vehicle-not-found-exception';
+import { PaginationAndFilteringDto } from 'src/dtos/pagination-and-filtering.dto';
+import { VehicleEntity } from 'src/entities/vehicle.entity';
 
 
 @Injectable()

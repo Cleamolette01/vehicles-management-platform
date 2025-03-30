@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { PaginationAndFilteringDto } from '../../dtos/pagination-and-filtering.dto';
-import { GetVehiclesService } from 'src/services/get-vehicles.service';
 import { VehicleEntity } from 'src/entities/vehicle.entity';
+import { GetVehiclesService } from 'src/services/vehicle-management/get-vehicles.service';
 
 
 @Controller('vehicles')

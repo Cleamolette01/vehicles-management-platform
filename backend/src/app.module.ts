@@ -10,15 +10,15 @@ import { CacheModule } from '@nestjs/cache-manager';
 import { SeedDatabaseService } from './services/seed-database.service';
 import { VehicleEntity } from './entities/vehicle.entity';
 import { GetVehiclesController } from './controllers/get-vehicles/get-vehicles.controller';
-import { GetVehiclesService } from './services/get-vehicles.service';
 import { AddVehicleController } from './controllers/add-vehicle/add-vehicle.controller';
-import { AddVehicleService } from './services/add-vehicule.service';
+import { AddVehicleService } from './services/vehicle-management/add-vehicule.service';
 import { UpdateVehicleController } from './controllers/update-vehicle/update-vehicle.controller';
-import { UpdateVehicleService } from './services/update-vehicle.service';
+import { UpdateVehicleService } from './services/vehicle-management/update-vehicle.service';
 import { RemoveVehicleController } from './controllers/remove-vehicle/remove-vehicle.controller';
-import { RemoveVehicleService } from './services/remove-vehicle.service';
+import { RemoveVehicleService } from './services/vehicle-management/remove-vehicle.service';
 import { FleetEfficiencyController } from './controllers/get-fleet-efficiency/get-fleet-efficiency.controller';
-import { FleetEfficiencyService } from './services/fleet-efficiency.service';
+import { FleetEfficiencyService } from './services/analytics/fleet-efficiency.service';
+import { GetVehiclesService } from './services/vehicle-management/get-vehicles.service';
 
 @Module({
   imports: [
