@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { VehicleEntity } from '../entities/vehicle.entity';
 import { PaginationAndFilteringDto } from '../dtos/pagination-and-filtering.dto';
+import { VehicleNotFoundException } from 'src/exceptions/vehicle-not-found-exception';
 
 
 @Injectable()
@@ -47,6 +48,14 @@ export class GetVehiclesService  {
       pageSize,
       totalPages: Math.ceil(total / pageSize),
     };
+  }
+
+  async findById(id: string): Promise<VehicleEntity> {
+    const vehicle = await this.vehicleRepository.findOneBy({ id });
+    if (!vehicle) {
+      throw new VehicleNotFoundException(id);
+    }
+    return vehicle;
   }
 
 }
