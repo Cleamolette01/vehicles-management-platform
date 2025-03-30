@@ -21,6 +21,8 @@ import { FleetEfficiencyService } from './services/analytics/fleet-efficiency.se
 import { GetVehiclesService } from './services/vehicle-management/get-vehicles.service';
 import { FleetCompositionController } from './controllers/get-fleet-composition/get-fleet-composition.controller';
 import { FleetCompositionService } from './services/analytics/fleet-composition.service';
+import { FleetOperationalController } from './controllers/get-fleet-operational/get-fleet-operational.controller';
+import { FleetOperationalService } from './services/analytics/fleet-operational.service';
 
 @Module({
   imports: [
@@ -40,7 +42,7 @@ import { FleetCompositionService } from './services/analytics/fleet-composition.
       },
     }),
   ],
-  controllers: [AppController, GetVehiclesController, AddVehicleController, UpdateVehicleController, RemoveVehicleController, FleetEfficiencyController, FleetCompositionController],
-  providers: [AppService, SeedDatabaseService, GetVehiclesService, AddVehicleService, UpdateVehicleService, RemoveVehicleService, FleetEfficiencyService, FleetCompositionService],
+  controllers: [AppController, GetVehiclesController, AddVehicleController, UpdateVehicleController, RemoveVehicleController, FleetEfficiencyController, FleetCompositionController, FleetOperationalController],
+  providers: [AppService, SeedDatabaseService, GetVehiclesService, AddVehicleService, UpdateVehicleService, RemoveVehicleService, FleetEfficiencyService, FleetCompositionService, FleetOperationalService],
 })
 export class AppModule {}
