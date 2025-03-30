@@ -1,6 +1,6 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import { AddVehicleDto } from 'src/dtos/add-vehicule.dto';
-import { AddVehicleService } from 'src/services/vehicle-management/add-vehicule/add-vehicule.service';
+import { AddVehicleDto } from '../../dtos/add-vehicule.dto';
+import { AddVehicleService } from '../../services/vehicle-management/add-vehicule/add-vehicule.service';
 
 
 @Controller('vehicles')

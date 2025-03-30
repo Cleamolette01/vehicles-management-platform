@@ -1,5 +1,5 @@
 import { IsString, IsInt, IsEnum, IsNumber, IsOptional, IsDate, Min, Max } from 'class-validator';
-import { VehicleStatus, VehicleType } from 'src/entities/vehicle.entity';
+import { VehicleStatus, VehicleType } from '../entities/vehicle.entity';
 
 export class AddVehicleDto {
   @IsString()

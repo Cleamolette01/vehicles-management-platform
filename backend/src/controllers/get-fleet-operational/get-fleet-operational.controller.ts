@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { FleetOperationalService } from 'src/services/analytics/fleet-operational/fleet-operational.service';
+import { FleetOperationalService } from '../../services/analytics/fleet-operational/fleet-operational.service';
 
 @Controller('analytics')
 export class FleetOperationalController {
