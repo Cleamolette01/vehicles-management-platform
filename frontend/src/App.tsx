@@ -4,6 +4,8 @@ import './App.css'
 import { Button } from './components/ui/button'
 import { increment } from './lib/increment'
 import { NavLink } from 'react-router'
+import { DashboardOverview } from './components/DashboardOverview'
+
 
 function App() {
   const [count, setCount] = useState(0)
@@ -17,6 +19,7 @@ function App() {
       <Button onClick={() => setCount((count) => increment(count))}>
         Click {count}
       </Button>
+      <DashboardOverview />
       <NavLink to="/version" className="underline hover:text-indigo-400">version</NavLink>
     </div>
   )
