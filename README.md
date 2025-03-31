@@ -6,7 +6,9 @@ Design and implement a small full-stack application to help fleet managers monit
 
 ## Notes - Cléa Deluëgue
 
-Welcome on my project. From http://localhost:8080/ you can navigate on Dashboard Overview, Analytics Visualization and Vehicle Management. On Vehicle Management you can view all vehicles, add a new vehicle, update a vehicle by clicking on it, sort by any column, filter by type.
+Welcome on my project. From http://localhost:8080/ you can navigate on Dashboard Overview, Analytics Visualization and Vehicle Management.
+On Vehicle Management you can view all vehicles, add a new vehicle, update a vehicle by clicking on it, sort by any column, filter by type.
+I also added a CI that run unit and e2e tests.
 
 With more time, I would have :
 - Added other filters
@@ -14,6 +16,11 @@ With more time, I would have :
 - Did a larger error gestion
 - Improved visual rendering
 - Added linters to catch unused code and to add rules on naming
+
+Don't hesitate to contact me if you have any question. Thanks for reviewing my work !
+Cléa
+cdeluegue@gmail.com
++33695351256
 
 ## Timeline & Submission
 
