@@ -23,7 +23,7 @@ interface Vehicle {
 
 const VehicleManagement = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
-  const [statusFilter, setStatusFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState(""); //TODO: Implement status filter
   const [typeFilter, setTypeFilter] = useState("");
   const [sortKey, setSortKey] = useState<keyof Vehicle>("brand");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
@@ -113,6 +113,10 @@ const VehicleManagement = () => {
     setIsModalOpen(true);
   };
 
+  const filteredVehicles = vehicles.filter(vehicle =>
+    typeFilter === "" || vehicle.type === typeFilter
+  );
+
   return (
     <div className="p-6 space-y-4">
       <h1 className="text-3xl font-bold">Vehicle Management</h1>
@@ -125,55 +129,67 @@ const VehicleManagement = () => {
           <span>Loading vehicles...</span>
         </div>
       ) : (
-        <Table>
-          <thead>
-            <TableRow>
-              {[
-                { key: "id", label: "ID" },
-                { key: "brand", label: "Brand" },
-                { key: "model", label: "Model" },
-                { key: "battery_capacity_kwh", label: "Battery Capacity (kWh)" },
-                { key: "current_charge_level", label: "Charge Level (%)" },
-                { key: "status", label: "Status" },
-                { key: "type", label: "Type" },
-                { key: "avg_energy_consumption", label: "Avg Energy Consumption (kWh/km)" },
-                { key: "emission_gco2_km", label: "CO2 Emission (gCO2/km)" },
-                { key: "last_updated", label: "Last Updated" },
-              ].map(({ key, label }) => (
-                <TableHead
-                  key={key}
-                  onClick={() => handleSort(key as keyof Vehicle)}
-                  className="cursor-pointer"
-                >
-                  {label}
-                  {sortKey === key && (
-                    sortOrder === "asc" ? (
-                      <FaArrowUp className="w-4 h-4 inline ml-2" />
-                    ) : (
-                      <FaArrowDown className="w-4 h-4 inline ml-2" />
-                    )
-                  )}
-                </TableHead>
-              ))}
-            </TableRow>
-          </thead>
-          <tbody>
-            {vehicles.map((vehicle) => (
-              <TableRow key={vehicle.id} onClick={() => handleEditVehicle(vehicle)}>
-                <TableCell>{vehicle.id}</TableCell>
-                <TableCell>{vehicle.brand}</TableCell>
-                <TableCell>{vehicle.model}</TableCell>
-                <TableCell>{vehicle.battery_capacity_kwh}</TableCell>
-                <TableCell>{vehicle.current_charge_level}</TableCell>
-                <TableCell>{vehicle.status}</TableCell>
-                <TableCell>{vehicle.type}</TableCell>
-                <TableCell>{vehicle.avg_energy_consumption}</TableCell>
-                <TableCell>{vehicle.emission_gco2_km}</TableCell>
-                <TableCell>{vehicle.last_updated}</TableCell>
-              </TableRow>
-            ))}
-          </tbody>
-        </Table>
+          <><div> <Select value={typeFilter} onValueChange={(value) => setTypeFilter(value === "all" ? "" : value)}>
+          <SelectTrigger>
+            {typeFilter ? typeFilter : "Filter on vehicle type"}
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Types</SelectItem>
+            <SelectItem value="BEV">BEV</SelectItem>
+            <SelectItem value="ICE">ICE</SelectItem>
+          </SelectContent>
+        </Select>
+
+        </div><Table>
+              <thead>
+                <TableRow>
+                  {[
+                    { key: "id", label: "ID" },
+                    { key: "brand", label: "Brand" },
+                    { key: "model", label: "Model" },
+                    { key: "battery_capacity_kwh", label: "Battery Capacity (kWh)" },
+                    { key: "current_charge_level", label: "Charge Level (%)" },
+                    { key: "status", label: "Status" },
+                    { key: "type", label: "Type" },
+                    { key: "avg_energy_consumption", label: "Avg Energy Consumption (kWh/km)" },
+                    { key: "emission_gco2_km", label: "CO2 Emission (gCO2/km)" },
+                    { key: "last_updated", label: "Last Updated" },
+                  ].map(({ key, label }) => (
+                    <TableHead
+                      key={key}
+                      onClick={() => handleSort(key as keyof Vehicle)}
+                      className="cursor-pointer"
+                    >
+                      {label}
+                      {sortKey === key && (
+                        sortOrder === "asc" ? (
+                          <FaArrowUp className="w-4 h-4 inline ml-2" />
+                        ) : (
+                          <FaArrowDown className="w-4 h-4 inline ml-2" />
+                        )
+                      )}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              </thead>
+              <tbody>
+                {filteredVehicles.map((vehicle) => (
+                  <TableRow key={vehicle.id} onClick={() => handleEditVehicle(vehicle)}>
+                    <TableCell>{vehicle.id}</TableCell>
+                    <TableCell>{vehicle.brand}</TableCell>
+                    <TableCell>{vehicle.model}</TableCell>
+                    <TableCell>{vehicle.battery_capacity_kwh}</TableCell>
+                    <TableCell>{vehicle.current_charge_level}</TableCell>
+                    <TableCell>{vehicle.status}</TableCell>
+                    <TableCell>{vehicle.type}</TableCell>
+                    <TableCell>{vehicle.avg_energy_consumption}</TableCell>
+                    <TableCell>{vehicle.emission_gco2_km}</TableCell>
+                    <TableCell>{vehicle.last_updated}</TableCell>
+                  </TableRow>
+                ))}
+              </tbody>
+            </Table></>
+
       )}
 
       <div className="flex justify-between mt-4">
