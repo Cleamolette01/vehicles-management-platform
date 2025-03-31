@@ -1,0 +1,36 @@
+name: Backend CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  test-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Node.js and pnpm
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'pnpm'
+
+      - name: 🔧 Install pnpm
+        run: corepack enable && corepack prepare pnpm@latest --activate
+
+      - name: 📥 Install dependencies
+        run: pnpm install
+
+      - name: 🚀 Run backend tests
+        run: |
+          pnpm --filter backend test
+          pnpm --filter backend test:e2e
