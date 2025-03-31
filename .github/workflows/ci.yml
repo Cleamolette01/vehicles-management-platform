@@ -26,12 +26,11 @@ jobs:
           --health-cmd "pg_isready -U test"
           --health-interval 10s
           --health-timeout 5s
-          --health-retries 5
+          --health-retries 20
 
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
-
 
       - name: 🔧 Install pnpm
         run: npm install -g pnpm
@@ -47,6 +46,15 @@ jobs:
 
       - name: 🏗️ Build NestJS app
         run: pnpm --filter backend build
+
+      - name: 🚀 Wait for PostgreSQL to be ready
+        run: |
+          while ! pg_isready -h localhost -p 5432 -U test; do
+            echo "Waiting for PostgreSQL to be ready..."
+            sleep 5
+          done
+        env:
+          PGPASSWORD: test
 
       - name: 🚀 Run database migrations
         run: pnpm --filter backend prisma migrate deploy
