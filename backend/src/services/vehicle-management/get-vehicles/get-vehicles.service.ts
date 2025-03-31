@@ -5,20 +5,28 @@ import { VehicleNotFoundException } from '../../../exceptions/vehicle-not-found-
 import { PaginationAndFilteringDto } from '../../../dtos/pagination-and-filtering.dto';
 import { VehicleEntity } from '../../../entities/vehicle.entity';
 
-
 @Injectable()
-export class GetVehiclesService  {
+export class GetVehiclesService {
   constructor(
     @InjectRepository(VehicleEntity)
     private vehicleRepository: Repository<VehicleEntity>,
   ) {}
 
   async getVehicles(paginationDto: PaginationAndFilteringDto) {
-    const { page, pageSize, status, minBatteryCapacity, maxBatteryCapacity, minChargeLevel, maxChargeLevel } = paginationDto;
+    const {
+      page,
+      pageSize,
+      status,
+      minBatteryCapacity,
+      maxBatteryCapacity,
+      minChargeLevel,
+      maxChargeLevel,
+      sort,
+      sortOrder,
+    } = paginationDto;
 
     const queryBuilder = this.vehicleRepository.createQueryBuilder('vehicle');
 
-    // Apply filters
     if (status) {
       queryBuilder.andWhere('vehicle.status = :status', { status });
     }
@@ -35,19 +43,29 @@ export class GetVehiclesService  {
       queryBuilder.andWhere('vehicle.current_charge_level <= :maxChargeLevel', { maxChargeLevel });
     }
 
-    // Apply pagination
-    queryBuilder.skip((page - 1) * pageSize);
-    queryBuilder.take(pageSize);
+    // Sorting
+    if (sort) {
+      const order = sortOrder === 'desc' ? 'DESC' : 'ASC';
+      queryBuilder.orderBy(`vehicle.${sort}`, order);
+    }
+
+    // Pagination
+    if (page && pageSize) {
+      queryBuilder.skip((page - 1) * pageSize);
+      queryBuilder.take(pageSize);
+    }
 
     const [vehicles, total] = await queryBuilder.getManyAndCount();
 
-    return {
+    const result = {
       data: vehicles,
       total,
-      page,
-      pageSize,
-      totalPages: Math.ceil(total / pageSize),
+      page: page || 1,
+      pageSize: pageSize || total,
+      totalPages: Math.ceil(total / (pageSize || total)),
     };
+
+    return result;
   }
 
   async findById(id: string): Promise<VehicleEntity> {
@@ -57,5 +75,4 @@ export class GetVehiclesService  {
     }
     return vehicle;
   }
-
 }

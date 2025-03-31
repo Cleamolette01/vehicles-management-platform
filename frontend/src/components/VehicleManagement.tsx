@@ -37,14 +37,15 @@ const VehicleManagement = () => {
     fetchVehicles();
   }, [statusFilter, typeFilter, sortKey, sortOrder, page]);
 
+
   const fetchVehicles = async () => {
     const queryParams = new URLSearchParams({
       page: page.toString(),
       pageSize: "10",
       status: statusFilter,
       type: typeFilter,
-      sort: sortKey,
-      sortOrder: sortOrder,
+      sort: sortKey, // Le paramètre pour trier
+      sortOrder: sortOrder, // L'ordre du tri
     });
 
     const response = await fetch(`/api/vehicles?${queryParams}`);
@@ -52,6 +53,7 @@ const VehicleManagement = () => {
     setVehicles(data.data);
     setTotalPages(data.totalPages);
   };
+
 
   const handleSort = (column: keyof Vehicle) => {
     if (sortKey === column) {
@@ -105,18 +107,6 @@ const VehicleManagement = () => {
     setIsModalOpen(true);
   };
 
-  const sortedVehicles = [...vehicles].sort((a, b) => {
-    const aValue = a[sortKey];
-    const bValue = b[sortKey];
-
-    if (typeof aValue === "string" && typeof bValue === "string") {
-      return sortOrder === "asc" ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
-    }
-    if (typeof aValue === "number" && typeof bValue === "number") {
-      return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
-    }
-    return 0;
-  });
 
   return (
     <div className="p-6 space-y-4">
@@ -158,7 +148,7 @@ const VehicleManagement = () => {
           </TableRow>
         </thead>
         <tbody>
-          {sortedVehicles.map((vehicle) => (
+          {vehicles.map((vehicle) => (
             <TableRow key={vehicle.id} onClick={() => handleEditVehicle(vehicle)}>
               <TableCell>{vehicle.id}</TableCell>
               <TableCell>{vehicle.brand}</TableCell>

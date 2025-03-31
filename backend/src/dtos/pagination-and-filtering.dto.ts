@@ -1,37 +1,43 @@
-import { IsOptional, IsInt, Min, Max, IsEnum } from 'class-validator';
-import { VehicleStatus } from '../entities/vehicle.entity';
-
+import { IsOptional, IsString, IsInt, Min, Max } from 'class-validator';
 
 export class PaginationAndFilteringDto {
   @IsOptional()
+  @IsString()
+  status?: string;
+
+  @IsOptional()
   @IsInt()
-  @Min(1)
+  @Min(0)
+  minBatteryCapacity?: number;
+
+  @IsOptional()
+  @IsInt()
   @Max(100)
-  page: number = 1;
+  maxBatteryCapacity?: number;
 
   @IsOptional()
   @IsInt()
-  @Min(1)
+  @Min(0)
+  minChargeLevel?: number;
+
+  @IsOptional()
+  @IsInt()
   @Max(100)
-  pageSize: number = 10;
-
-  @IsOptional()
-  @IsEnum(VehicleStatus)
-  status: VehicleStatus;
+  maxChargeLevel?: number;
 
   @IsOptional()
   @IsInt()
-  minBatteryCapacity: number;
+  page?: number;
 
   @IsOptional()
   @IsInt()
-  maxBatteryCapacity: number;
+  pageSize?: number;
 
   @IsOptional()
-  @IsInt()
-  minChargeLevel: number;
+  @IsString()
+  sort?: string;
 
   @IsOptional()
-  @IsInt()
-  maxChargeLevel: number;
+  @IsString()
+  sortOrder?: 'asc' | 'desc';
 }
