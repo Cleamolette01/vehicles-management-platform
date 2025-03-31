@@ -23,9 +23,6 @@ jobs:
           POSTGRES_DB: beev
         options: --health-cmd="pg_isready -U postgres" --health-interval=10s --health-timeout=5s --health-retries=5
 
-  install_dependencies:
-    needs: setup
-    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -33,14 +30,14 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
-      - name: Install dependencies for backend
+      - name: Install backend dependencies
         run: pnpm --filter backend install
 
-      - name: Install dependencies for frontend
+      - name: Install frontend dependencies
         run: pnpm --filter frontend install
 
   run_tests:
-    needs: install_dependencies
+    needs: setup
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -57,4 +54,3 @@ jobs:
 
       - name: Run backend e2e tests
         run: pnpm --filter backend e2e-test
-
