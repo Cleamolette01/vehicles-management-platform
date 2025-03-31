@@ -106,7 +106,7 @@ const AnalyticsVisualization = () => {
                 <XAxis dataKey="type" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="emissions" fill="var(--color-secondary)">
+                <Bar dataKey="emissions" fill="var(--color-primary)">
                   <LabelList dataKey="emissions" position="top" />
                 </Bar>
                 <Legend
