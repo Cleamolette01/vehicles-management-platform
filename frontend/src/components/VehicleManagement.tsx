@@ -29,13 +29,8 @@ const VehicleManagement = () => {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newVehicle, setNewVehicle] = useState<Partial<Vehicle>>({});
-
-  useEffect(() => {
-    if (!isModalOpen) {
-      setNewVehicle({}); //Reinitialize form
-    }
-  }, [isModalOpen]);
+  const [isEditMode, setIsEditMode] = useState(false); // Ajout du mode édition
+  const [selectedVehicle, setSelectedVehicle] = useState<Partial<Vehicle>>({});
 
   useEffect(() => {
     fetchVehicles();
@@ -66,57 +61,70 @@ const VehicleManagement = () => {
     }
   };
 
-  const handleAddVehicle = async () => {
+  const handleAddOrUpdateVehicle = async () => {
     if (
-      !newVehicle.brand ||
-      !newVehicle.model ||
-      !newVehicle.battery_capacity_kwh ||
-      !newVehicle.current_charge_level ||
-      !newVehicle.status ||
-      !newVehicle.type ||
-      !newVehicle.avg_energy_consumption ||
-      !newVehicle.emission_gco2_km ||
-      !newVehicle.last_updated
+      !selectedVehicle.brand ||
+      !selectedVehicle.model ||
+      !selectedVehicle.battery_capacity_kwh ||
+      !selectedVehicle.current_charge_level ||
+      !selectedVehicle.status ||
+      !selectedVehicle.type ||
+      !selectedVehicle.avg_energy_consumption ||
+      !selectedVehicle.emission_gco2_km ||
+      !selectedVehicle.last_updated
     ) {
-
-      toast.error("Error. No vehicle has been added");
+      toast.error("Error. Please fill all the fields.");
       return;
     }
 
-    const response = await fetch("/api/vehicles", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newVehicle),
-    });
+    const response = isEditMode
+      ? await fetch(`/api/vehicles/${selectedVehicle.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(selectedVehicle),
+        })
+      : await fetch("/api/vehicles", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(selectedVehicle),
+        });
 
     if (response.ok) {
       setIsModalOpen(false);
       fetchVehicles();
-      toast.success("Vehicle Added Successfully");
+      toast.success(isEditMode ? "Vehicle updated successfully" : "Vehicle added successfully");
     } else {
-      toast.error("Error. Failed to add vehicle");
+      toast.error("Error. Failed to update the vehicle");
     }
+  };
+
+  const handleEditVehicle = (vehicle: Vehicle) => {
+    setIsEditMode(true);
+    setSelectedVehicle(vehicle);
+    setIsModalOpen(true);
   };
 
   return (
     <div className="p-6 space-y-4">
       <h1 className="text-3xl font-bold">Vehicle Management</h1>
-      <Button onClick={() => setIsModalOpen(true)}>+ Add New Vehicle</Button>
+      <Button onClick={() => { setIsEditMode(false); setSelectedVehicle({}); setIsModalOpen(true); }}>
+        + Add New Vehicle
+      </Button>
 
       <Table>
         <thead>
           <TableRow>
             {[
-               "id",
-               "Brand",
-               "Model",
-               "Battery capacity (kwh)",
-               "Current Charge Level (%)",
-               "Status",
-               "Type",
-               "Avg Energy Consumption (kWh/100km)",
-               "Emission (Grams of CO2 per kilometer)",
-               "Last Updated",
+              "id",
+              "Brand",
+              "Model",
+              "Battery capacity (kwh)",
+              "Current Charge Level (%)",
+              "Status",
+              "Type",
+              "Avg Energy Consumption (kWh/100km)",
+              "Emission (Grams of CO2 per kilometer)",
+              "Last Updated",
             ].map((key) => (
               <TableHead key={key} onClick={() => handleSort(key as keyof Vehicle)}>
                 {key.replace("_", " ")} {sortKey === key && (sortOrder === "asc" ? "↑" : "↓")}
@@ -126,7 +134,7 @@ const VehicleManagement = () => {
         </thead>
         <tbody>
           {vehicles.map((vehicle) => (
-            <TableRow key={vehicle.id}>
+            <TableRow key={vehicle.id} onClick={() => handleEditVehicle(vehicle)}>
               <TableCell>{vehicle.id}</TableCell>
               <TableCell>{vehicle.brand}</TableCell>
               <TableCell>{vehicle.model}</TableCell>
@@ -157,7 +165,7 @@ const VehicleManagement = () => {
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add New Vehicle</DialogTitle>
+            <DialogTitle>{isEditMode ? "Edit Vehicle" : "Add New Vehicle"}</DialogTitle>
           </DialogHeader>
           <div className="space-y-2">
             {[
@@ -172,14 +180,14 @@ const VehicleManagement = () => {
                 key={field}
                 placeholder={field.replace("_", " ")}
                 type={field === "last_updated" ? "date" : "text"}
-                onChange={(e) => setNewVehicle((prev) => ({ ...prev, [field]: e.target.value }))}
-                value={newVehicle[field as keyof Partial<Vehicle>] || ""}
+                onChange={(e) => setSelectedVehicle((prev) => ({ ...prev, [field]: e.target.value }))}
+                value={selectedVehicle[field as keyof Partial<Vehicle>] || ""}
               />
             ))}
 
-            <Select value={newVehicle.type || ""} onValueChange={(value) => setNewVehicle((prev) => ({ ...prev, type: value }))}>
+            <Select value={selectedVehicle.type || ""} onValueChange={(value) => setSelectedVehicle((prev) => ({ ...prev, type: value }))}>
               <SelectTrigger>
-                <Button>{newVehicle.type || "Select Type"}</Button>
+                <Button>{selectedVehicle.type || "Select Type"}</Button>
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="BEV">BEV</SelectItem>
@@ -187,10 +195,9 @@ const VehicleManagement = () => {
               </SelectContent>
             </Select>
 
-
-            <Select value={newVehicle.status || ""} onValueChange={(value) => setNewVehicle((prev) => ({ ...prev, status: value }))}>
+            <Select value={selectedVehicle.status || ""} onValueChange={(value) => setSelectedVehicle((prev) => ({ ...prev, status: value }))}>
               <SelectTrigger>
-                <Button>{newVehicle.status || "Select Status"}</Button>
+                <Button>{selectedVehicle.status || "Select Status"}</Button>
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="available">Available</SelectItem>
@@ -199,20 +206,20 @@ const VehicleManagement = () => {
               </SelectContent>
             </Select>
 
-
             <Input
               type="date"
               placeholder="Last updated"
-              onChange={(e) => setNewVehicle((prev) => ({ ...prev, last_updated: e.target.value }))}
-              value={newVehicle.last_updated || ""}
+              onChange={(e) => setSelectedVehicle((prev) => ({ ...prev, last_updated: e.target.value }))}
+              value={selectedVehicle.last_updated || ""}
             />
 
-            <Button onClick={handleAddVehicle}>Submit</Button>
+            <Button onClick={handleAddOrUpdateVehicle}>
+              {isEditMode ? "Update Vehicle" : "Add Vehicle"}
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
 
-      {/* Toaster component to show the toast */}
       <Toaster />
     </div>
   );
