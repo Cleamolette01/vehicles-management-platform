@@ -32,28 +32,34 @@ const VehicleManagement = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState<Partial<Vehicle>>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     fetchVehicles();
   }, [statusFilter, typeFilter, sortKey, sortOrder, page]);
 
-
   const fetchVehicles = async () => {
+    setIsLoading(true);
     const queryParams = new URLSearchParams({
       page: page.toString(),
       pageSize: "10",
       status: statusFilter,
       type: typeFilter,
-      sort: sortKey, // Le paramètre pour trier
-      sortOrder: sortOrder, // L'ordre du tri
+      sort: sortKey,
+      sortOrder: sortOrder,
     });
 
-    const response = await fetch(`/api/vehicles?${queryParams}`);
-    const data = await response.json();
-    setVehicles(data.data);
-    setTotalPages(data.totalPages);
+    try {
+      const response = await fetch(`/api/vehicles?${queryParams}`);
+      const data = await response.json();
+      setVehicles(data.data);
+      setTotalPages(data.totalPages);
+    } catch (error) {
+      toast.error("Failed to fetch vehicles.");
+    } finally {
+      setIsLoading(false);
+    }
   };
-
 
   const handleSort = (column: keyof Vehicle) => {
     if (sortKey === column) {
@@ -107,7 +113,6 @@ const VehicleManagement = () => {
     setIsModalOpen(true);
   };
 
-
   return (
     <div className="p-6 space-y-4">
       <h1 className="text-3xl font-bold">Vehicle Management</h1>
@@ -115,55 +120,61 @@ const VehicleManagement = () => {
         + Add New Vehicle
       </Button>
 
-      <Table>
-        <thead>
-          <TableRow>
-            {[
-              { key: "id", label: "ID" },
-              { key: "brand", label: "Brand" },
-              { key: "model", label: "Model" },
-              { key: "battery_capacity_kwh", label: "Battery Capacity (kWh)" },
-              { key: "current_charge_level", label: "Charge Level (%)" },
-              { key: "status", label: "Status" },
-              { key: "type", label: "Type" },
-              { key: "avg_energy_consumption", label: "Avg Energy Consumption (kWh/km)" },
-              { key: "emission_gco2_km", label: "CO2 Emission (gCO2/km)" },
-              { key: "last_updated", label: "Last Updated" },
-            ].map(({ key, label }) => (
-              <TableHead
-                key={key}
-                onClick={() => handleSort(key as keyof Vehicle)}
-                className="cursor-pointer"
-              >
-                {label}
-                {sortKey === key && (
-                  sortOrder === "asc" ? (
-                    <FaArrowUp className="w-4 h-4 inline ml-2" />
-                  ) : (
-                    <FaArrowDown className="w-4 h-4 inline ml-2" />
-                  )
-                )}
-              </TableHead>
-            ))}
-          </TableRow>
-        </thead>
-        <tbody>
-          {vehicles.map((vehicle) => (
-            <TableRow key={vehicle.id} onClick={() => handleEditVehicle(vehicle)}>
-              <TableCell>{vehicle.id}</TableCell>
-              <TableCell>{vehicle.brand}</TableCell>
-              <TableCell>{vehicle.model}</TableCell>
-              <TableCell>{vehicle.battery_capacity_kwh}</TableCell>
-              <TableCell>{vehicle.current_charge_level}</TableCell>
-              <TableCell>{vehicle.status}</TableCell>
-              <TableCell>{vehicle.type}</TableCell>
-              <TableCell>{vehicle.avg_energy_consumption}</TableCell>
-              <TableCell>{vehicle.emission_gco2_km}</TableCell>
-              <TableCell>{vehicle.last_updated}</TableCell>
+      {isLoading ? (
+        <div className="flex justify-center items-center py-4">
+          <span>Loading vehicles...</span>
+        </div>
+      ) : (
+        <Table>
+          <thead>
+            <TableRow>
+              {[
+                { key: "id", label: "ID" },
+                { key: "brand", label: "Brand" },
+                { key: "model", label: "Model" },
+                { key: "battery_capacity_kwh", label: "Battery Capacity (kWh)" },
+                { key: "current_charge_level", label: "Charge Level (%)" },
+                { key: "status", label: "Status" },
+                { key: "type", label: "Type" },
+                { key: "avg_energy_consumption", label: "Avg Energy Consumption (kWh/km)" },
+                { key: "emission_gco2_km", label: "CO2 Emission (gCO2/km)" },
+                { key: "last_updated", label: "Last Updated" },
+              ].map(({ key, label }) => (
+                <TableHead
+                  key={key}
+                  onClick={() => handleSort(key as keyof Vehicle)}
+                  className="cursor-pointer"
+                >
+                  {label}
+                  {sortKey === key && (
+                    sortOrder === "asc" ? (
+                      <FaArrowUp className="w-4 h-4 inline ml-2" />
+                    ) : (
+                      <FaArrowDown className="w-4 h-4 inline ml-2" />
+                    )
+                  )}
+                </TableHead>
+              ))}
             </TableRow>
-          ))}
-        </tbody>
-      </Table>
+          </thead>
+          <tbody>
+            {vehicles.map((vehicle) => (
+              <TableRow key={vehicle.id} onClick={() => handleEditVehicle(vehicle)}>
+                <TableCell>{vehicle.id}</TableCell>
+                <TableCell>{vehicle.brand}</TableCell>
+                <TableCell>{vehicle.model}</TableCell>
+                <TableCell>{vehicle.battery_capacity_kwh}</TableCell>
+                <TableCell>{vehicle.current_charge_level}</TableCell>
+                <TableCell>{vehicle.status}</TableCell>
+                <TableCell>{vehicle.type}</TableCell>
+                <TableCell>{vehicle.avg_energy_consumption}</TableCell>
+                <TableCell>{vehicle.emission_gco2_km}</TableCell>
+                <TableCell>{vehicle.last_updated}</TableCell>
+              </TableRow>
+            ))}
+          </tbody>
+        </Table>
+      )}
 
       <div className="flex justify-between mt-4">
         <Button onClick={() => setPage((prev) => Math.max(prev - 1, 1))} disabled={page === 1}>
@@ -223,15 +234,15 @@ const VehicleManagement = () => {
           </div>
 
           <Input
-              type="date"
-              placeholder="Last updated"
-              onChange={(e) => setSelectedVehicle((prev) => ({ ...prev, last_updated: e.target.value }))}
-              value={selectedVehicle.last_updated || ""}
-            />
+            type="date"
+            placeholder="Last updated"
+            onChange={(e) => setSelectedVehicle((prev) => ({ ...prev, last_updated: e.target.value }))}
+            value={selectedVehicle.last_updated || ""}
+          />
 
-            <Button onClick={handleAddOrUpdateVehicle}>
-              {isEditMode ? "Update Vehicle" : "Add Vehicle"}
-            </Button>
+          <Button onClick={handleAddOrUpdateVehicle}>
+            {isEditMode ? "Update Vehicle" : "Add Vehicle"}
+          </Button>
         </DialogContent>
       </Dialog>
 
