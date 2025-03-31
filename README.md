@@ -4,6 +4,17 @@
 
 Design and implement a small full-stack application to help fleet managers monitor their electric vehicle fleet's efficiency and environmental impact. This project should demonstrate your ability to create clean, well-organized code while solving real-world problems.
 
+## Notes - Cléa Deluëgue
+
+Welcome on my project. From http://localhost:8080/ you can navigate on Dashboard Overview, Analytics Visualization and Vehicle Management. On Vehicle Management you can view all vehicles, add a new vehicle, update a vehicle by clicking on it, sort by any column, filter by type.
+
+With more time, I would have :
+- Added other filters
+- Refactored Vehicle Management page to make it shorter (transfer methods in api.ts)
+- Did a larger error gestion
+- Improved visual rendering
+- Added linters to catch unused code and to add rules on naming
+
 ## Timeline & Submission
 
 - **Duration**: 3 days
