@@ -4,7 +4,7 @@ import "./App.css";
 import DashboardOverview from "./components/DashboardOverview";
 import VehicleManagement from "./components/VehicleManagement";
 import AnalyticsVisualization from "./components/AnalyticsVisualization";
-
+import ErrorBoundary from "./ErrorBoundary";
 
 function App() {
   return (
@@ -34,9 +34,30 @@ function App() {
         {/* Routes */}
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/dashboard" element={<DashboardOverview />} />
-          <Route path="/analytics" element={<AnalyticsVisualization />} />
-          <Route path="/vehicles" element={<VehicleManagement />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ErrorBoundary>
+                <DashboardOverview />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/analytics"
+            element={
+              <ErrorBoundary>
+                <AnalyticsVisualization />
+              </ErrorBoundary>
+            }
+          />
+          <Route
+            path="/vehicles"
+            element={
+              <ErrorBoundary>
+                <VehicleManagement />
+              </ErrorBoundary>
+            }
+          />
         </Routes>
       </div>
     </Router>
