@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select";
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
+import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 
 interface Vehicle {
   id: string;
@@ -24,12 +25,12 @@ const VehicleManagement = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [statusFilter, setStatusFilter] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
-  const [sortKey, setSortKey] = useState("brand");
+  const [sortKey, setSortKey] = useState<keyof Vehicle>("brand");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false); // Ajout du mode édition
+  const [isEditMode, setIsEditMode] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState<Partial<Vehicle>>({});
 
   useEffect(() => {
@@ -104,6 +105,19 @@ const VehicleManagement = () => {
     setIsModalOpen(true);
   };
 
+  const sortedVehicles = [...vehicles].sort((a, b) => {
+    const aValue = a[sortKey];
+    const bValue = b[sortKey];
+
+    if (typeof aValue === "string" && typeof bValue === "string") {
+      return sortOrder === "asc" ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+    }
+    if (typeof aValue === "number" && typeof bValue === "number") {
+      return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
+    }
+    return 0;
+  });
+
   return (
     <div className="p-6 space-y-4">
       <h1 className="text-3xl font-bold">Vehicle Management</h1>
@@ -115,25 +129,36 @@ const VehicleManagement = () => {
         <thead>
           <TableRow>
             {[
-              "id",
-              "Brand",
-              "Model",
-              "Battery capacity (kwh)",
-              "Current Charge Level (%)",
-              "Status",
-              "Type",
-              "Avg Energy Consumption (kWh/100km)",
-              "Emission (Grams of CO2 per kilometer)",
-              "Last Updated",
-            ].map((key) => (
-              <TableHead key={key} onClick={() => handleSort(key as keyof Vehicle)}>
-                {key.replace("_", " ")} {sortKey === key && (sortOrder === "asc" ? "↑" : "↓")}
+              { key: "id", label: "ID" },
+              { key: "brand", label: "Brand" },
+              { key: "model", label: "Model" },
+              { key: "battery_capacity_kwh", label: "Battery Capacity (kWh)" },
+              { key: "current_charge_level", label: "Charge Level (%)" },
+              { key: "status", label: "Status" },
+              { key: "type", label: "Type" },
+              { key: "avg_energy_consumption", label: "Avg Energy Consumption (kWh/km)" },
+              { key: "emission_gco2_km", label: "CO2 Emission (gCO2/km)" },
+              { key: "last_updated", label: "Last Updated" },
+            ].map(({ key, label }) => (
+              <TableHead
+                key={key}
+                onClick={() => handleSort(key as keyof Vehicle)}
+                className="cursor-pointer"
+              >
+                {label}
+                {sortKey === key && (
+                  sortOrder === "asc" ? (
+                    <FaArrowUp className="w-4 h-4 inline ml-2" />
+                  ) : (
+                    <FaArrowDown className="w-4 h-4 inline ml-2" />
+                  )
+                )}
               </TableHead>
             ))}
           </TableRow>
         </thead>
         <tbody>
-          {vehicles.map((vehicle) => (
+          {sortedVehicles.map((vehicle) => (
             <TableRow key={vehicle.id} onClick={() => handleEditVehicle(vehicle)}>
               <TableCell>{vehicle.id}</TableCell>
               <TableCell>{vehicle.brand}</TableCell>
@@ -150,7 +175,7 @@ const VehicleManagement = () => {
         </tbody>
       </Table>
 
-      <div className="flex justify-between">
+      <div className="flex justify-between mt-4">
         <Button onClick={() => setPage((prev) => Math.max(prev - 1, 1))} disabled={page === 1}>
           Previous
         </Button>
@@ -205,8 +230,9 @@ const VehicleManagement = () => {
                 <SelectItem value="in_use">In Use</SelectItem>
               </SelectContent>
             </Select>
+          </div>
 
-            <Input
+          <Input
               type="date"
               placeholder="Last updated"
               onChange={(e) => setSelectedVehicle((prev) => ({ ...prev, last_updated: e.target.value }))}
@@ -216,7 +242,6 @@ const VehicleManagement = () => {
             <Button onClick={handleAddOrUpdateVehicle}>
               {isEditMode ? "Update Vehicle" : "Add Vehicle"}
             </Button>
-          </div>
         </DialogContent>
       </Dialog>
 
