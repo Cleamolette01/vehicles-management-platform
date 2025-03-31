@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
-import { Table, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Select } from "@/components/ui/select";
+import { Table, TableCell, TableHead, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
 interface Vehicle {
   id: string;
@@ -24,6 +28,14 @@ const VehicleManagement = () => {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newVehicle, setNewVehicle] = useState<Partial<Vehicle>>({});
+
+  useEffect(() => {
+    if (!isModalOpen) {
+      setNewVehicle({}); //Reinitialize form
+    }
+  }, [isModalOpen]);
 
   useEffect(() => {
     fetchVehicles();
@@ -54,55 +66,66 @@ const VehicleManagement = () => {
     }
   };
 
-  const sortedVehicles = [...vehicles].sort((a, b) => {
-    const aValue = a[sortKey];
-    const bValue = b[sortKey];
-    if (aValue < bValue) return sortOrder === "asc" ? -1 : 1;
-    if (aValue > bValue) return sortOrder === "asc" ? 1 : -1;
-    return 0;
-  });
+  const handleAddVehicle = async () => {
+    if (
+      !newVehicle.brand ||
+      !newVehicle.model ||
+      !newVehicle.battery_capacity_kwh ||
+      !newVehicle.current_charge_level ||
+      !newVehicle.status ||
+      !newVehicle.type ||
+      !newVehicle.avg_energy_consumption ||
+      !newVehicle.emission_gco2_km ||
+      !newVehicle.last_updated
+    ) {
+
+      toast.error("Error. No vehicle has been added");
+      return;
+    }
+
+    const response = await fetch("/api/vehicles", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newVehicle),
+    });
+
+    if (response.ok) {
+      setIsModalOpen(false);
+      fetchVehicles();
+      toast.success("Vehicle Added Successfully");
+    } else {
+      toast.error("Error. Failed to add vehicle");
+    }
+  };
 
   return (
     <div className="p-6 space-y-4">
       <h1 className="text-3xl font-bold">Vehicle Management</h1>
+      <Button onClick={() => setIsModalOpen(true)}>+ Add New Vehicle</Button>
 
       <Table>
         <thead>
           <TableRow>
-            <TableHead onClick={() => handleSort("id")}>
-              ID {sortKey === "id" && (sortOrder === "asc" ? "↑" : "↓")}
-            </TableHead>
-            <TableHead onClick={() => handleSort("brand")}>
-              Brand {sortKey === "brand" && (sortOrder === "asc" ? "↑" : "↓")}
-            </TableHead>
-            <TableHead onClick={() => handleSort("model")}>
-              Model {sortKey === "model" && (sortOrder === "asc" ? "↑" : "↓")}
-            </TableHead>
-            <TableHead onClick={() => handleSort("battery_capacity_kwh")}>
-              Battery (kWh) {sortKey === "battery_capacity_kwh" && (sortOrder === "asc" ? "↑" : "↓")}
-            </TableHead>
-            <TableHead onClick={() => handleSort("current_charge_level")}>
-              Charge Level (%) {sortKey === "current_charge_level" && (sortOrder === "asc" ? "↑" : "↓")}
-            </TableHead>
-            <TableHead onClick={() => handleSort("status")}>
-              Status {sortKey === "status" && (sortOrder === "asc" ? "↑" : "↓")}
-            </TableHead>
-            <TableHead onClick={() => handleSort("type")}>
-              Type {sortKey === "type" && (sortOrder === "asc" ? "↑" : "↓")}
-            </TableHead>
-            <TableHead onClick={() => handleSort("avg_energy_consumption")}>
-              Avg Energy Consumption (kWh/km) {sortKey === "avg_energy_consumption" && (sortOrder === "asc" ? "↑" : "↓")}
-            </TableHead>
-            <TableHead onClick={() => handleSort("emission_gco2_km")}>
-              CO2 Emission (gCO2/km) {sortKey === "emission_gco2_km" && (sortOrder === "asc" ? "↑" : "↓")}
-            </TableHead>
-            <TableHead onClick={() => handleSort("last_updated")}>
-              Last Updated {sortKey === "last_updated" && (sortOrder === "asc" ? "↑" : "↓")}
-            </TableHead>
+            {[
+               "id",
+               "Brand",
+               "Model",
+               "Battery capacity (kwh)",
+               "Current Charge Level (%)",
+               "Status",
+               "Type",
+               "Avg Energy Consumption (kWh/100km)",
+               "Emission (Grams of CO2 per kilometer)",
+               "Last Updated",
+            ].map((key) => (
+              <TableHead key={key} onClick={() => handleSort(key as keyof Vehicle)}>
+                {key.replace("_", " ")} {sortKey === key && (sortOrder === "asc" ? "↑" : "↓")}
+              </TableHead>
+            ))}
           </TableRow>
         </thead>
         <tbody>
-          {sortedVehicles.map((vehicle) => (
+          {vehicles.map((vehicle) => (
             <TableRow key={vehicle.id}>
               <TableCell>{vehicle.id}</TableCell>
               <TableCell>{vehicle.brand}</TableCell>
@@ -130,6 +153,67 @@ const VehicleManagement = () => {
           Next
         </Button>
       </div>
+
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add New Vehicle</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-2">
+            {[
+              "brand",
+              "model",
+              "battery_capacity_kwh",
+              "current_charge_level",
+              "avg_energy_consumption",
+              "emission_gco2_km",
+            ].map((field) => (
+              <Input
+                key={field}
+                placeholder={field.replace("_", " ")}
+                type={field === "last_updated" ? "date" : "text"}
+                onChange={(e) => setNewVehicle((prev) => ({ ...prev, [field]: e.target.value }))}
+                value={newVehicle[field as keyof Partial<Vehicle>] || ""}
+              />
+            ))}
+
+            <Select value={newVehicle.type || ""} onValueChange={(value) => setNewVehicle((prev) => ({ ...prev, type: value }))}>
+              <SelectTrigger>
+                <Button>{newVehicle.type || "Select Type"}</Button>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="BEV">BEV</SelectItem>
+                <SelectItem value="ICE">ICE</SelectItem>
+              </SelectContent>
+            </Select>
+
+
+            <Select value={newVehicle.status || ""} onValueChange={(value) => setNewVehicle((prev) => ({ ...prev, status: value }))}>
+              <SelectTrigger>
+                <Button>{newVehicle.status || "Select Status"}</Button>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="available">Available</SelectItem>
+                <SelectItem value="charging">Charging</SelectItem>
+                <SelectItem value="in_use">In Use</SelectItem>
+              </SelectContent>
+            </Select>
+
+
+            <Input
+              type="date"
+              placeholder="Last updated"
+              onChange={(e) => setNewVehicle((prev) => ({ ...prev, last_updated: e.target.value }))}
+              value={newVehicle.last_updated || ""}
+            />
+
+            <Button onClick={handleAddVehicle}>Submit</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Toaster component to show the toast */}
+      <Toaster />
     </div>
   );
 };
