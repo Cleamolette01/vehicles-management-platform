@@ -7,19 +7,8 @@ import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/u
 import { Toaster } from "@/components/ui/sonner";
 import { toast } from "sonner";
 import { FaArrowUp, FaArrowDown } from "react-icons/fa";
+import { addVehicle, updateVehicle, Vehicle } from "@/api/api";
 
-interface Vehicle {
-  id: string;
-  brand: string;
-  model: string;
-  battery_capacity_kwh: number;
-  current_charge_level: number;
-  status: string;
-  last_updated: string;
-  avg_energy_consumption: number;
-  type: string;
-  emission_gco2_km: number;
-}
 
 const VehicleManagement = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
@@ -86,25 +75,20 @@ const VehicleManagement = () => {
       return;
     }
 
-    const response = isEditMode
-      ? await fetch(`/api/vehicles/${selectedVehicle.id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(selectedVehicle),
-        })
-      : await fetch("/api/vehicles", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(selectedVehicle),
-        });
+    try {
+      if (isEditMode) {
+        await updateVehicle(selectedVehicle.id!, selectedVehicle);
+      } else {
+        await addVehicle(selectedVehicle);
+      }
 
-    if (response.ok) {
       setIsModalOpen(false);
       fetchVehicles();
       toast.success(isEditMode ? "Vehicle updated successfully" : "Vehicle added successfully");
-    } else {
+    } catch (error) {
       toast.error("Error. Failed to update the vehicle");
     }
+
   };
 
   const handleEditVehicle = (vehicle: Vehicle) => {
