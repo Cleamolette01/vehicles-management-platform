@@ -45,7 +45,7 @@ function App() {
 
 const Home = () => (
   <div className="text-lg">
-    <p>Welcome on home page !</p>
+    <p>Welcome on home page</p>
   </div>
 );
 

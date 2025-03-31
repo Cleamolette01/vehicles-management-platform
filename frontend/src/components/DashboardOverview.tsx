@@ -12,41 +12,48 @@ const DashboardOverview = () => {
 
   return (
     <div className="space-y-6 p-6">
-      <h1 className="text-3xl font-bold">Dashboard Overview</h1>
+      <h1 className="text-4xl font-bold mb-8">Dashboard Overview</h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8">
+        {/* Carte Fleet Composition */}
+        <Card className="w-full lg:w-[600px] xl:w-[700px] h-[500px] shadow-lg">
           <CardHeader>
-            <CardTitle>Fleet Composition</CardTitle>
-            <CardDescription>Overview of vehicle types and their counts.</CardDescription>
+            <CardTitle className="text-3xl">Fleet Composition</CardTitle>
+            <CardDescription className="text-xl">Overview of vehicle types and their counts.</CardDescription>
           </CardHeader>
           <CardContent>
             {fleetComposition?.map((item) => (
-              <div key={item.type} className="mb-4">
-                <strong>{item.type}</strong>: {item.count} vehicles
+              <div key={item.type} className="mb-4 text-2xl">
+                <strong className="text-3xl">{item.type}</strong>: <span className="text-4xl font-bold">{item.count}</span> vehicles
               </div>
             ))}
           </CardContent>
         </Card>
 
-        <Card>
+        {/* Carte Charging vs In Use */}
+        <Card className="w-full lg:w-[600px] xl:w-[700px] h-[500px] shadow-lg">
           <CardHeader>
-            <CardTitle>Charging vs In Use</CardTitle>
-            <CardDescription>Charging vs. In-Use vehicle count.</CardDescription>
+            <CardTitle className="text-3xl">Charging vs In Use</CardTitle>
+            <CardDescription className="text-xl">Charging vs. In-Use vehicle count.</CardDescription>
           </CardHeader>
           <CardContent>
-            <div>Charging: {chargingVsInUse?.chargingCount}</div>
-            <div>In Use: {chargingVsInUse?.inUseCount}</div>
+            <div className="text-2xl mb-4">
+              <strong className="text-3xl">Charging:</strong> <span className="text-4xl font-bold">{chargingVsInUse?.chargingCount}</span>
+            </div>
+            <div className="text-2xl">
+              <strong className="text-3xl">In Use:</strong> <span className="text-4xl font-bold">{chargingVsInUse?.inUseCount}</span>
+            </div>
           </CardContent>
         </Card>
 
-        <Card>
+        {/* Carte Fleet Availability Rate */}
+        <Card className="w-full lg:w-[600px] xl:w-[700px] h-[500px] shadow-lg">
           <CardHeader>
-            <CardTitle>Fleet Availability Rate</CardTitle>
-            <CardDescription>Availability rate of the fleet.</CardDescription>
+            <CardTitle className="text-3xl">Fleet Availability Rate</CardTitle>
+            <CardDescription className="text-xl">Availability rate of the fleet.</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-center text-lg font-semibold">
+            <div className="text-center text-4xl font-semibold">
               {fleetAvailabilityRate?.availabilityRate}
             </div>
           </CardContent>
