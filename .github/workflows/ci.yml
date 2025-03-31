@@ -13,24 +13,48 @@ on:
 jobs:
   test-backend:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      - name: 📦 Setup Node.js and pnpm
+      - name: 📦 Setup Node.js and cache dependencies
         uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: 'pnpm'
 
       - name: 🔧 Install pnpm
-        run: corepack enable && corepack prepare pnpm@latest --activate
+        run: npm install -g pnpm
 
       - name: 📥 Install dependencies
         run: pnpm install
 
-      - name: 🚀 Run backend tests
+      - name: 🏗️ Build NestJS app
+        run: pnpm --filter backend build
+
+      - name: 🚀 Run database migrations
+        run: pnpm --filter backend prisma migrate deploy
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/test_db
+
+      - name: 🧪 Run backend tests
         run: |
           pnpm --filter backend test
           pnpm --filter backend test:e2e
+        env:
+          DATABASE_URL: postgresql://test:test@localhost:5432/test_db
