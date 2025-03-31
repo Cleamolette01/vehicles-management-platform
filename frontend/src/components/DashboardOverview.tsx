@@ -1,14 +1,12 @@
-import { useAverageEnergyConsumptionRate, useChargingVsInUse, useEmissionsComparison, useFleetAvailabilityRate, useFleetComposition } from "@/api/api";
+import { useFleetComposition, useChargingVsInUse, useFleetAvailabilityRate } from "@/api/api";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
 
 const DashboardOverview = () => {
   const { data: fleetComposition, isLoading: loadingFleetComposition } = useFleetComposition();
   const { data: chargingVsInUse, isLoading: loadingChargingVsInUse } = useChargingVsInUse();
   const { data: fleetAvailabilityRate, isLoading: loadingFleetAvailabilityRate } = useFleetAvailabilityRate();
-  const { data: energyConsumption, isLoading: loadingEnergyConsumption } = useAverageEnergyConsumptionRate();
-  const { data: emissionsComparison, isLoading: loadingEmissionsComparison } = useEmissionsComparison();
 
-  if (loadingFleetComposition || loadingChargingVsInUse || loadingFleetAvailabilityRate || loadingEnergyConsumption || loadingEmissionsComparison) {
+  if (loadingFleetComposition || loadingChargingVsInUse || loadingFleetAvailabilityRate) {
     return <div>Loading...</div>;
   }
 
@@ -51,36 +49,6 @@ const DashboardOverview = () => {
             <div className="text-center text-lg font-semibold">
               {fleetAvailabilityRate?.availabilityRate}
             </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Average Energy Consumption</CardTitle>
-            <CardDescription>Energy consumption of vehicles.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {energyConsumption?.map((item) => (
-              <div key={item.model} className="mb-4">
-                <div className="font-semibold">{item.model}</div>
-                <div>{item.vehicles_avg_energy_consumption} kWh</div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Emissions Comparison</CardTitle>
-            <CardDescription>Emissions comparison by vehicle type.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {emissionsComparison?.map((item) => (
-              <div key={item.type} className="mb-4">
-                <div className="font-semibold">{item.type}</div>
-                <div>{item.vehicles_avg_emissions} gCO2/km</div>
-              </div>
-            ))}
           </CardContent>
         </Card>
       </div>

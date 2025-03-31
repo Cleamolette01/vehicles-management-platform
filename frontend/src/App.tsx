@@ -3,6 +3,7 @@ import beevLogo from "./assets/beev.svg";
 import "./App.css";
 import DashboardOverview from "./components/DashboardOverview";
 import VehicleManagement from "./components/VehicleManagement";
+import AnalyticsVisualization from "./components/AnalyticsVisualization";
 
 
 function App() {
@@ -22,6 +23,9 @@ function App() {
           <NavLink to="/dashboard" className="text-blue-500 hover:underline">
             Dashboard Overview
           </NavLink>
+          <NavLink to="/analytics" className="text-blue-500 hover:underline">
+            Analytics Visualization
+          </NavLink>
           <NavLink to="/vehicles" className="text-blue-500 hover:underline">
             Vehicle Management
           </NavLink>
@@ -31,6 +35,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/dashboard" element={<DashboardOverview />} />
+          <Route path="/analytics" element={<AnalyticsVisualization />} />
           <Route path="/vehicles" element={<VehicleManagement />} />
         </Routes>
       </div>
@@ -43,6 +48,5 @@ const Home = () => (
     <p>Welcome on home page !</p>
   </div>
 );
-
 
 export default App;
