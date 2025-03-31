@@ -17,7 +17,7 @@ I also added a CI that run unit and e2e tests.
 - Do a larger error gestion
 - Improve visual rendering
 - Add linters to catch unused code and to add rules on naming
-...
+- ...
 
 Don't hesitate to contact me if you have any question. Thanks for reviewing my work !
 
