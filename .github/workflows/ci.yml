@@ -1,66 +1,60 @@
-name: Backend CI
+name: CI Workflow
 
 on:
   push:
     branches:
       - main
-      - develop
   pull_request:
     branches:
       - main
-      - develop
 
 jobs:
-  test-backend:
+  setup:
     runs-on: ubuntu-latest
+
     services:
       postgres:
-        image: postgres:15
-        env:
-          POSTGRES_USER: test
-          POSTGRES_PASSWORD: test
-          POSTGRES_DB: test_db
+        image: postgres:17.4
         ports:
           - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U test"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: beev
+        options: --health-cmd="pg_isready -U postgres" --health-interval=10s --health-timeout=5s --health-retries=5
 
+  install_dependencies:
+    needs: setup
+    runs-on: ubuntu-latest
     steps:
-      - name: 📥 Checkout repository
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - name: 🔧 Install pnpm
+      - name: Install pnpm
         run: npm install -g pnpm
 
-      - name: 📥 Install dependencies
-        run: pnpm install
+      - name: Install dependencies for backend
+        run: pnpm --filter backend install
 
-      - name: 📦 Setup Node.js and cache dependencies
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          cache: 'pnpm'
+      - name: Install dependencies for frontend
+        run: pnpm --filter frontend install
 
-      - name: 🏗️ Build NestJS app
-        run: pnpm --filter backend build
+  run_tests:
+    needs: install_dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - name: ⏳ Wait for PostgreSQL to be ready
-        run: |
-          for i in $(seq 1 30); do
-            if pg_isready -h localhost -U test; then
-              echo "PostgreSQL is ready!"
-              break
-            fi
-            echo "Waiting for PostgreSQL to be ready..."
-            sleep 5
-          done
+      - name: Install pnpm
+        run: npm install -g pnpm
 
-      - name: 🧪 Run backend tests
-        run: |
-          pnpm --filter backend test
-          pnpm --filter backend test:e2e
-        env:
-          DATABASE_URL: postgresql://test:test@localhost:5432/test_db
+      - name: Install backend dependencies
+        run: pnpm --filter backend install
+
+      - name: Run backend unit tests
+        run: pnpm --filter backend test
+
+      - name: Run backend e2e tests
+        run: pnpm --filter backend e2e-test
+
