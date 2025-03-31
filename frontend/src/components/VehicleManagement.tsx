@@ -109,8 +109,8 @@ const VehicleManagement = () => {
       </Button>
 
       {isLoading ? (
-        <div className="flex justify-center items-center py-4">
-          <span>Loading vehicles...</span>
+        <div className="fixed inset-0 flex justify-center items-center bg-white bg-opacity-75 z-50">
+          <div className="text-2xl font-semibold">Loading vehicles...</div>
         </div>
       ) : (
           <><div> <Select value={typeFilter} onValueChange={(value) => setTypeFilter(value === "all" ? "" : value)}>
