@@ -12,12 +12,12 @@ On Vehicle Management you can view all vehicles, add a new vehicle, update a veh
 
 I also added a CI that run unit and e2e tests.
 
-*With more time, I would have :*
-- Added other filters
-- Refactored Vehicle Management page to make it shorter (transfer methods in api.ts)
-- Did a larger error gestion
-- Improved visual rendering
-- Added linters to catch unused code and to add rules on naming
+*With more time, I will :*
+- Add other filters
+- Do a larger error gestion
+- Improve visual rendering
+- Add linters to catch unused code and to add rules on naming
+...
 
 Don't hesitate to contact me if you have any question. Thanks for reviewing my work !
 
