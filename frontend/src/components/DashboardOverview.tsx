@@ -7,8 +7,13 @@ const DashboardOverview = () => {
   const { data: fleetAvailabilityRate, isLoading: loadingFleetAvailabilityRate } = useFleetAvailabilityRate();
 
   if (loadingFleetComposition || loadingChargingVsInUse || loadingFleetAvailabilityRate) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-blue-500"></div>
+      </div>
+    );
   }
+
 
   return (
     <div className="space-y-6 p-6">
