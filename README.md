@@ -6,7 +6,7 @@ This full-stack application helps fleet managers monitor their electric vehicle 
 
 ## Notes
 
-Welcome on my project. You can navigate on Dashboard Overview, Analytics Visualization and Vehicle Management.
+Welcome on my project. From home page, you can navigate on Dashboard Overview, Analytics Visualization and Vehicle Management.
 
 On Vehicle Management you can view all vehicles, add a new vehicle, update a vehicle by clicking on it, sort by any column, filter by type.
 
