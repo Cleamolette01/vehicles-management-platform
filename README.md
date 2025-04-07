@@ -1,45 +1,20 @@
-# EV Fleet Analytics - Full-Stack Developer Assessment
+# Vehicles Management Platform
 
 ## Overview
 
-Design and implement a small full-stack application to help fleet managers monitor their electric vehicle fleet's efficiency and environmental impact. This project should demonstrate your ability to create clean, well-organized code while solving real-world problems.
+This full-stack application helps fleet managers monitor their electric vehicle fleet's efficiency and environmental impact.
 
-## Notes - Cléa Deluëgue
+## Notes
 
-Welcome on my project. From http://localhost:8080/ you can navigate on Dashboard Overview, Analytics Visualization and Vehicle Management.
+Welcome on my project. You can navigate on Dashboard Overview, Analytics Visualization and Vehicle Management.
 
 On Vehicle Management you can view all vehicles, add a new vehicle, update a vehicle by clicking on it, sort by any column, filter by type.
 
 I also added a CI that run unit and e2e tests.
 
-*With more time, I will :*
-- Add other filters
-- Do a larger error gestion
-- Improve visual rendering
-- Add linters to catch unused code and to add rules on naming
-- ...
-
-Don't hesitate to contact me if you have any question. Thanks for reviewing my work !
-
-*Cléa cdeluegue@gmail.com +33695351256*
-
-## Timeline & Submission
-
-- **Duration**: 3 days
-- **Expected effort**: 4-5 hours
-- **Submission method**: Private GitHub repository
-- **Share access in a private github repository with**:
-  - https://github.com/antonin-beev
-  - https://github.com/JadBeev
-  - https://github.com/CarlEH
-
-## Project Requirements
-
-### 1. Backend (NestJS)
-
 #### Data Model
 
-The application will track vehicles with the following properties:
+The application track vehicles with the following properties:
 
 - ID (uuid)
 - Brand (string)
@@ -51,8 +26,6 @@ The application will track vehicles with the following properties:
 - Average energy consumption (kWh/100km)
 - Type (BEV/ICE) - *BEV = Battery Electric Vehicle, ICE = Internal Combustion Engine*
 - Emission_gco2_km - *Grams of CO2 per kilometer*
-
-**Data Source**: Seed your database using the provided `data/cars.csv` file (available in the project repository).
 
 #### API Endpoints
 
@@ -72,69 +45,13 @@ The application will track vehicles with the following properties:
         - Current fleet availability rate (% of vehicles available)
         - Number of vehicles currently charging vs. in use
 
-#### Technical Specifications
+#### Technologies used
 
-- Use [NestJs](https://docs.nestjs.com/) as the backend framework
-- Use [TypeORM](https://github.com/typeorm/typeorm) for database interactions
-- Implement request validation using [class-validator](https://docs.nestjs.com/pipes#class-validator)
-- Add Redis caching for analytics endpoints
-- Include error handling middleware
-- Write [unit tests](https://vitest.dev/) for services
-- Add [e2e tests](https://playwright.dev/) for critical endpoints
-
-### 2. Frontend (React)
-
-#### Features
-
-1. **Dashboard Overview**
-    - Fleet summary statistics
-    - Fleet status
-    - Environmental impact metrics
-2. **Vehicle Management**
-    - List view with sorting and filtering
-    - Add/Edit vehicle forms
-3. **Bonus:** Analytics Visualization using analytics endpoints
-
-#### Technical Specifications
-
-- Use TypeScript
-- Implement using [shadcn/ui](https://ui.shadcn.com/) components
-- Style with [Tailwind CSS](https://tailwindcss.com/docs)
-- Use [React Query](https://tanstack.com/query/latest) for data fetching
-- Include unit tests for key components
-- Implement error boundaries
-- Add loading states
-
-## Bonus Points
-
-- Implemented monitoring/logging
-- Advanced caching strategies
-- Performance optimizations
-- CI setup
-- Additional features that add value
-
-## Evaluation Criteria
-
-We're looking for:
-- Clean, maintainable code
-- Problem-solving approach
-- Attention to detail
-- Learning ability
-- Technical decision-making
-- Time management
-
-**Important**: Focus on code quality over feature quantity. It's okay to mock some data or functionalities, but document any assumptions you make.
-
-## AI Usage Guidelines
-
-While AI tools can be valuable learning resources, excessive reliance on AI-generated code for this assessment defeats its purpose and may harm your candidacy. This test evaluates your problem-solving abilities, technical decision-making, and coding practices.
-
-During the review process, be prepared for:
-- A live discussion about your implementation
-- Questions about specific technical choices
-- Potential real-time modifications to your code
-
----
+- [NestJs](https://docs.nestjs.com/) as the backend framework
+- [TypeORM](https://github.com/typeorm/typeorm) for database interactions
+- Request validation using [class-validator](https://docs.nestjs.com/pipes#class-validator)
+- [Redis](https://redis.io/) caching for analytics endpoints
+- [ReactJS](https://react.dev/) for building the frontend user interface
 
 # Project Setup Guide
 
@@ -201,14 +118,3 @@ pnpm dev:frontend
 
 - Default credentials are set for development
 - ALWAYS change credentials in production
-
-## FAQ
-
-1. **Q: Where can I find the cars.csv file?**
-   A: The file will be available in the project repository under the `data` directory.
-2. **Q: What if I can't complete all requirements in time?**
-   A: Focus on code quality over quantity. Document what you would have done with more time.
-
-## Need Help?
-
-If you have any questions, please contact: tech@beev.co
