@@ -13,7 +13,7 @@ function App() {
         <a href="https://beev.co" target="_blank">
           <img src={beevLogo} className="logo w-16 h-16" alt="Beev logo" />
         </a>
-        <h1 className="text-4xl font-bold">Beev Homework</h1>
+        <h1 className="text-4xl font-bold">Vehicles Management Platform</h1>
 
         {/* Navigation */}
         <nav className="flex gap-4">
